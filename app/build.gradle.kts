@@ -41,10 +41,14 @@ android {
 }
 
 dependencies {
-
+    // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    // Koin
+    implementation(libs.insert.koin.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation("io.insert-koin:koin-core:3.5.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
