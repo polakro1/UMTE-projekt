@@ -9,7 +9,7 @@ class ExpenseEntity(
     val id: Long = 0,
     val title: String,
     val amount: Double,
-    val date: String,
+    val date: Long,
     val categoryId: Long,
     val note: String? = null,
     val latitude: Double? = null,
