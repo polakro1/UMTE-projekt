@@ -1,4 +1,4 @@
-package com.example.umte_project.data.mappers
+package com.example.umte_project.data.local.mappers
 
 import com.example.umte_project.data.local.entities.CategoryEntity
 import com.example.umte_project.domain.models.Category
