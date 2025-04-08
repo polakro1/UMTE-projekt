@@ -1,8 +1,8 @@
 package com.example.umte_project.data.repository
 
 import com.example.umte_project.data.local.dao.ExpenseDao
-import com.example.umte_project.data.mappers.toDomain
-import com.example.umte_project.data.mappers.toEntity
+import com.example.umte_project.data.local.mappers.toDomain
+import com.example.umte_project.data.local.mappers.toEntity
 import com.example.umte_project.domain.models.Expense
 import com.example.umte_project.domain.repository.ExpenseRepository
 import kotlinx.coroutines.flow.Flow
