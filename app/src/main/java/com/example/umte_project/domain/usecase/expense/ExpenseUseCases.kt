@@ -1,7 +1,7 @@
 package com.example.umte_project.domain.usecase.expense
 
 class ExpenseUseCases(
-    val getExpenses: GetExpenseUseCase,
+    val getExpenses: GetExpensesUseCase,
     val getExpense: GetExpenseUseCase,
     val addExpense: AddExpenseUseCase,
     val deleteExpense: DeleteExpenseUseCase
