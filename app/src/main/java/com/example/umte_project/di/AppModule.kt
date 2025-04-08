@@ -4,6 +4,8 @@ package com.example.umte_project.di
 import androidx.room.Room
 import org.koin.dsl.module
 import com.example.umte_project.data.local.ExpenseDatabase
+import com.example.umte_project.data.repository.ExpenseRepositoryImpl
+import com.example.umte_project.domain.repository.ExpenseRepository
 import org.koin.android.ext.koin.androidContext
 
 
@@ -16,5 +18,12 @@ val databaseModule = module {
             ExpenseDatabase::class.java,
             DATABASE_NAME
         ).fallbackToDestructiveMigrationFrom().build()
+    }
+
+    single { get<ExpenseDatabase>().expenseDao() }
+    single { get<ExpenseDatabase>().categoryDao() }
+
+    single<ExpenseRepository> {
+        ExpenseRepositoryImpl(get())
     }
 }
