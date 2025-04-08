@@ -48,7 +48,7 @@ dependencies {
     // Koin
     implementation(libs.insert.koin.koin.android)
     implementation(libs.koin.androidx.compose)
-    implementation("io.insert-koin:koin-core:3.5.0")
+    implementation(libs.koin.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
