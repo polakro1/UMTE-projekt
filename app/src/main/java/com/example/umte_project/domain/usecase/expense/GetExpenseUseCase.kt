@@ -14,7 +14,7 @@ class GetExpenseUseCase(
         try {
             val expense = expenseRepository.getExpenseById(id)
             if (expense != null) {
-                emit(Resource.Succes(expense))
+                emit(Resource.Success(expense))
             } else {
                 emit(Resource.Error("Expense not found"))
             }

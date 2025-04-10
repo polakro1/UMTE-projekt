@@ -12,9 +12,8 @@ class GetExpensesUseCase(
     operator fun invoke(): Flow<Resource<List<Expense>>> = flow {
         emit(Resource.Loading)
         try {
-            expenseRepository.getAllExpenses().collect { expenses
-                ->
-                emit(Resource.Succes(expenses))
+            expenseRepository.getAllExpenses().collect { expenses ->
+                emit(Resource.Success(expenses))
             }
         } catch (e: Exception) {
             emit(Resource.Error("Failed to load expenses: ${e.message}"))

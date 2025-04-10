@@ -1,7 +1,6 @@
 package com.example.umte_project.domain.usecase.category
 
 import com.example.umte_project.domain.models.Category
-import com.example.umte_project.domain.models.Expense
 import com.example.umte_project.domain.repository.CategoryRepository
 import com.example.umte_project.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +13,7 @@ class GetCategoryUseCase(private val categoryRepository: CategoryRepository) {
         try {
             val category = categoryRepository.getCategoryById(id)
             if (category != null) {
-                emit(Resource.Succes(category))
+                emit(Resource.Success(category))
             } else {
                 emit(Resource.Error("Category not found"))
             }

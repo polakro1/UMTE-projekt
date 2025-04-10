@@ -1,6 +1,8 @@
 package com.example.umte_project.di
 
+import com.example.umte_project.domain.usecase.category.AddCategoryUseCase
 import com.example.umte_project.domain.usecase.category.CategoryUseCases
+import com.example.umte_project.domain.usecase.category.DeleteCategoryUseCase
 import com.example.umte_project.domain.usecase.expense.ExpenseUseCases
 import com.example.umte_project.domain.usecase.category.GetCategoriesUseCase
 import com.example.umte_project.domain.usecase.category.GetCategoryUseCase
@@ -18,8 +20,8 @@ val useCaseModule = module {
 
     factory { GetCategoriesUseCase(get()) }
     factory { GetCategoryUseCase(get()) }
-    factory { AddExpenseUseCase(get()) }
-    factory { DeleteExpenseUseCase(get()) }
+    factory { AddCategoryUseCase(get()) }
+    factory { DeleteCategoryUseCase(get()) }
 
     factory {
         ExpenseUseCases(
