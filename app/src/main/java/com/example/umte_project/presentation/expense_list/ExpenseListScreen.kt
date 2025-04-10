@@ -12,11 +12,11 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ExpenseListScreen(viewModel: ExpenseListViewModel = koinViewModel()) {
-    val expenses by viewModel.expenses.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     Text("Ahoj")
     LazyColumn {
-        items(expenses) { expense ->
+        items(state.expenses) { expense ->
             ExpenseItem(expense = expense)
         }
     }
