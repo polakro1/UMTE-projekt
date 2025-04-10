@@ -8,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.umte_project.presentation.expense_list.ExpenseListScreen
-import com.example.umte_project.utils.Routes
 
 @Composable
 fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues) {
