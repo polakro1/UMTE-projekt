@@ -1,7 +1,6 @@
 package com.example.umte_project.presentation.expense_list
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import com.example.umte_project.domain.models.Expense
 import com.example.umte_project.domain.usecase.expense.ExpenseUseCases
@@ -10,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 data class ExpenseListState(
     val expenses: List<Expense> = emptyList(),
@@ -33,7 +31,7 @@ class ExpenseListViewModel(private val expenseUseCases: ExpenseUseCases) : ViewM
                     _state.update { it.copy(isLoading = true) }
                 }
 
-                is Resource.Succes -> {
+                is Resource.Success -> {
                     _state.update {
                         it.copy(
                             expenses = result.data,
