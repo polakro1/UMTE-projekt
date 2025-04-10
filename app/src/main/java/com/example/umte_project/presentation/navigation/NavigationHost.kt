@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.umte_project.presentation.add_edit_expense.AddEditExpenseScreen
 import com.example.umte_project.presentation.expense_list.ExpenseListScreen
 
 @Composable
@@ -18,6 +19,9 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
     ) {
         composable(Routes.EXPENSE_LIST) {
             ExpenseListScreen()
+        }
+        composable(Routes.ADD_EDIT_EXPENSE) {
+            AddEditExpenseScreen()
         }
     }
 }
