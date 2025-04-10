@@ -4,7 +4,6 @@ import java.time.ZonedDateTime
 
 data class Expense(
     val id: Long = 0,
-    val title: String,
     val amount: Double,
     val createdAt: ZonedDateTime,
     val categoryId: Long,
