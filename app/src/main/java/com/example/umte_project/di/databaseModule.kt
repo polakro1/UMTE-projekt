@@ -16,10 +16,10 @@ private const val DATABASE_NAME = "expense_db"
 val databaseModule = module {
     single {
         Room.databaseBuilder(
-            androidContext(),
-            ExpenseDatabase::class.java,
-            DATABASE_NAME
-        ).fallbackToDestructiveMigrationFrom().build()
+            androidContext(), ExpenseDatabase::class.java, DATABASE_NAME
+        ).createFromAsset("database/expense_db.db")
+            .fallbackToDestructiveMigration()// jen pro testování
+            .build()
     }
 
     single { get<ExpenseDatabase>().expenseDao() }
