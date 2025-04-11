@@ -2,6 +2,8 @@ package com.example.umte_project.data.local.mappers
 
 import com.example.umte_project.domain.models.Expense
 import com.example.umte_project.data.local.entities.ExpenseEntity
+import com.example.umte_project.data.local.entities.ExpenseWithCategoryEntity
+import com.example.umte_project.domain.models.ExpenseWithCategory
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -28,3 +30,17 @@ fun Expense.toEntity() = ExpenseEntity(
     longitude = longitude,
     receiptImageUri = receiptImageUri
 )
+
+fun ExpenseWithCategoryEntity.toDomain(): ExpenseWithCategory {
+    return ExpenseWithCategory(
+        expense = expenseEntity.toDomain(),
+        category = categoryEntity.toDomain()
+    )
+}
+
+fun ExpenseWithCategory.toEntity(): ExpenseWithCategoryEntity {
+    return ExpenseWithCategoryEntity(
+        expenseEntity = expense.toEntity(),
+        categoryEntity = category.toEntity()
+    )
+}

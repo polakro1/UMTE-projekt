@@ -1,19 +1,18 @@
 package com.example.umte_project.domain.usecase.expense
 
-import android.util.Log
-import com.example.umte_project.domain.models.Expense
+import com.example.umte_project.domain.models.ExpenseWithCategory
 import com.example.umte_project.domain.repository.ExpenseRepository
 import com.example.umte_project.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetExpensesUseCase(
+class GetExpensesWithCategoryUseCase(
     private val expenseRepository: ExpenseRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<Expense>>> = flow {
+    operator fun invoke(): Flow<Resource<List<ExpenseWithCategory>>> = flow {
         emit(Resource.Loading)
         try {
-            expenseRepository.getAllExpenses().collect { expenses ->
+            expenseRepository.getExpensesWithCategory().collect { expenses ->
                 emit(Resource.Success(expenses))
             }
         } catch (e: Exception) {
