@@ -23,6 +23,7 @@ data class AddEditExpenseState(
     val amount: Double = 0.0,
     val createdAt: ZonedDateTime = ZonedDateTime.now(),
     val categoryId: Long = 0,
+    val selectedCategory: Category? = null,
     val note: String = "",
     val latitude: String = "",
     val longitude: String = "",
@@ -68,9 +69,18 @@ class AddEditExpenseViewModel(
                             loadingError = null
                         )
                     }
+                    selectInitialCategory()
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun selectInitialCategory() {
+        val id = _state.value.categoryId
+        val category = _state.value.categories.find { it.id == id }
+        if (category != null) {
+            _state.update { it.copy(selectedCategory = category) }
+        }
     }
 
     fun onAmountChange(newAmount: Double) {
@@ -83,6 +93,15 @@ class AddEditExpenseViewModel(
 
     fun onCategoryIdChange(newCategoryId: Long) {
         _state.update { it.copy(categoryId = newCategoryId) }
+    }
+
+    fun onCategogySelected(category: Category) {
+        _state.update {
+            it.copy(
+                selectedCategory = category,
+                categoryId = category.id
+            )
+        }
     }
 
     fun onNoteChanged(newNote: String) {
