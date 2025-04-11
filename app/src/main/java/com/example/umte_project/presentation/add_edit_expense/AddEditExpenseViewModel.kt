@@ -11,6 +11,7 @@ import com.example.umte_project.domain.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,35 +44,33 @@ class AddEditExpenseViewModel(
     }
 
     private fun loadCategories() {
-        viewModelScope.launch {
-            categoryUseCases.getCategories().onEach { result ->
+        categoryUseCases.getCategories().onEach { result ->
 
-                when (result) {
-                    is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = true) }
+            when (result) {
+                is Resource.Loading -> {
+                    _state.update { it.copy(isLoading = true) }
+                }
+
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            loadingError = result.message
+                        )
                     }
+                }
 
-                    is Resource.Error -> {
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                loadingError = result.message
-                            )
-                        }
-                    }
-
-                    is Resource.Success -> {
-                        _state.update {
-                            it.copy(
-                                categories = result.data,
-                                isLoading = false,
-                                loadingError = null
-                            )
-                        }
+                is Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            categories = result.data,
+                            isLoading = false,
+                            loadingError = null
+                        )
                     }
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun onAmountChange(newAmount: Double) {
