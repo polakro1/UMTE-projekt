@@ -8,7 +8,7 @@ data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    val iconRes: Int?, // odkaz na res?
+    val iconRes: String, // odkaz na res?
     val colorHex: String = "#FFFFFF"
 ) {
 }

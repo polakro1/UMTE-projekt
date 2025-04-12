@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.umte_project.domain.models.ExpenseWithCategory
+import com.example.umte_project.presentation.ui_components.CategoryIcon
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -35,6 +36,6 @@ fun ExpenseDetailScreen(
 fun ExpenseDetailContent(expense: ExpenseWithCategory) {
     Column {
         Text(text = expense.expense.amount.toString())
-
+        CategoryIcon(expense.category.iconRes)
     }
 }

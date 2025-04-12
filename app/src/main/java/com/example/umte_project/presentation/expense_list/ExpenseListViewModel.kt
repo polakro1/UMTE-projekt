@@ -48,6 +48,7 @@ class ExpenseListViewModel(private val expenseUseCases: ExpenseUseCases) : ViewM
                 }
 
                 is Resource.Error -> {
+                    Log.d("DB", result.message)
                     _state.update { it.copy(isLoading = false, error = result.message) }
                 }
             }
