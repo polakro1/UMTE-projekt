@@ -10,4 +10,5 @@ interface ExpenseRepository {
     suspend fun addExpense(expense: Expense)
     suspend fun deleteExpense(expense: Expense)
     fun getExpensesWithCategory(): Flow<List<ExpenseWithCategory>>
+    suspend fun getExpenseWithCategory(id: Long): ExpenseWithCategory?
 }

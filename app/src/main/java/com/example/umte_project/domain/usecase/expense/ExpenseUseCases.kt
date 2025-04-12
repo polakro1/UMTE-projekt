@@ -5,6 +5,7 @@ class ExpenseUseCases(
     val getExpense: GetExpenseUseCase,
     val addExpense: AddExpenseUseCase,
     val deleteExpense: DeleteExpenseUseCase,
-    val getExpensesWithCategory: GetExpensesWithCategoryUseCase
+    val getExpensesWithCategory: GetExpensesWithCategoryUseCase,
+    val getExpenseWithCategory: GetExpenseWithCategoryUseCase
 ) {
 }

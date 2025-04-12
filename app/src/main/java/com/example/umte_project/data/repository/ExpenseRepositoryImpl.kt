@@ -35,4 +35,8 @@ class ExpenseRepositoryImpl(private val dao: ExpenseDao) : ExpenseRepository {
         }
     }
 
+    override suspend fun getExpenseWithCategory(id: Long): ExpenseWithCategory? {
+        return dao.getExpenseWithCategory(id)?.toDomain()
+    }
+
 }

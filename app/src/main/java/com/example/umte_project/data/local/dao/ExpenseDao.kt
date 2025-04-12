@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.umte_project.data.local.entities.ExpenseEntity
 import com.example.umte_project.data.local.entities.ExpenseWithCategoryEntity
+import com.example.umte_project.domain.models.ExpenseWithCategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,4 +28,8 @@ interface ExpenseDao {
     @Transaction
     @Query("SELECT * FROM expenses ORDER BY createdAtMillis DESC")
     fun getExpensesWithCategory(): Flow<List<ExpenseWithCategoryEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM expenses WHERE id = :id")
+    suspend fun getExpenseWithCategory(id: Long): ExpenseWithCategoryEntity?
 }

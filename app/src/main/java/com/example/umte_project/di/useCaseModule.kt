@@ -9,6 +9,7 @@ import com.example.umte_project.domain.usecase.category.GetCategoryUseCase
 import com.example.umte_project.domain.usecase.expense.AddExpenseUseCase
 import com.example.umte_project.domain.usecase.expense.DeleteExpenseUseCase
 import com.example.umte_project.domain.usecase.expense.GetExpenseUseCase
+import com.example.umte_project.domain.usecase.expense.GetExpenseWithCategoryUseCase
 import com.example.umte_project.domain.usecase.expense.GetExpensesUseCase
 import com.example.umte_project.domain.usecase.expense.GetExpensesWithCategoryUseCase
 import org.koin.dsl.module
@@ -20,6 +21,7 @@ val useCaseModule = module {
     factory { DeleteExpenseUseCase(get()) }
 
     factory { GetExpensesWithCategoryUseCase(get()) }
+    factory { GetExpenseWithCategoryUseCase(get()) }
 
     factory { GetCategoriesUseCase(get()) }
     factory { GetCategoryUseCase(get()) }
@@ -32,7 +34,8 @@ val useCaseModule = module {
             getExpense = get(),
             addExpense = get(),
             deleteExpense = get(),
-            getExpensesWithCategory = get()
+            getExpensesWithCategory = get(),
+            getExpenseWithCategory = get()
         )
     }
 
