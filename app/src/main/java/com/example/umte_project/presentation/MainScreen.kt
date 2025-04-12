@@ -1,7 +1,6 @@
 package com.example.umte_project.presentation
 
 
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
@@ -25,7 +24,7 @@ fun MainScreen() {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate(Routes.ADD_EDIT_EXPENSE) {
+                navController.navigate(Routes.ADD_EXPENSE) {
                     navController.graph.startDestinationRoute?.let { screenRoute ->
                         popUpTo(screenRoute) {
                             saveState = true

@@ -28,6 +28,7 @@ data class AddEditExpenseState(
     val latitude: String = "",
     val longitude: String = "",
     val isSaving: Boolean = false,
+    val savingError: String? = null,
     val loadingError: String? = null,
     val isLoading: Boolean = false,
     val categories: List<Category> = emptyList()
@@ -40,12 +41,8 @@ class AddEditExpenseViewModel(
     private val _state = MutableStateFlow(AddEditExpenseState())
     val state: StateFlow<AddEditExpenseState> = _state.asStateFlow()
 
-    init {
-        loadCategories()
-    }
-
-    private fun loadCategories() {
-        categoryUseCases.getCategories().onEach { result ->
+    fun loadCategoryById(id: Long) {
+        categoryUseCases.getCategory(id).onEach { result ->
 
             when (result) {
                 is Resource.Loading -> {
@@ -64,7 +61,7 @@ class AddEditExpenseViewModel(
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            categories = result.data,
+                            selectedCategory = result.data,
                             isLoading = false,
                             loadingError = null
                         )
@@ -118,13 +115,13 @@ class AddEditExpenseViewModel(
 
     fun saveExpense(onSave: () -> Unit) {
         viewModelScope.launch {
-            _state.update { it.copy(isSaving = true, loadingError = null) }
+            _state.update { it.copy(isSaving = true, savingError = null) }
             try {
                 val expense = Expense(
                     id = state.value.expense?.id ?: 0,
                     amount = state.value.amount,
                     createdAt = state.value.createdAt,
-                    categoryId = state.value.categoryId,
+                    categoryId = state.value.selectedCategory!!.id,
                     note = if (state.value.note.isBlank()) null else state.value.note,
                     longitude = if (state.value.longitude.isBlank()) null else state.value.longitude.toDoubleOrNull(),
                     latitude = if (state.value.latitude.isBlank()) null else state.value.latitude.toDoubleOrNull()
@@ -138,7 +135,7 @@ class AddEditExpenseViewModel(
                 _state.update {
                     it.copy(
                         isSaving = false,
-                        loadingError = "Exception while adding expense: ${e.message}"
+                        savingError = "Exception while saving expense: ${e.message}"
                     )
                 }
             }

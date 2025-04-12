@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.umte_project.presentation.add_edit_expense.AddEditExpenseScreen
+import com.example.umte_project.presentation.category_select.SelectCategoryScreen
 import com.example.umte_project.presentation.expense_detail.ExpenseDetailScreen
 import com.example.umte_project.presentation.expense_list.ExpenseListScreen
 
@@ -23,9 +24,28 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
         composable(Routes.EXPENSE_LIST) {
             ExpenseListScreen(navController = navController)
         }
-        composable(Routes.ADD_EDIT_EXPENSE) {
-            AddEditExpenseScreen()
+        composable(Routes.ADD_EXPENSE) {
+            AddEditExpenseScreen(navController = navController)
         }
+
+        composable(
+            route = Routes.ADD_EXPENSE_WITH_CATEGORY, arguments = listOf(
+                navArgument("selectedCategoryId") {
+                    type = NavType.StringType
+                    nullable = true
+                })
+        ) { navBackStackEntry ->
+            val categoryIdStr = navBackStackEntry.arguments?.getString("selectedCategoryId")
+            val selectedCategoryId = categoryIdStr?.toLongOrNull()
+            AddEditExpenseScreen(
+                navController = navController, selectedCategoryId = selectedCategoryId
+            )
+        }
+
+        composable(route = Routes.SELECT_CATEGORY) {
+            SelectCategoryScreen(navController = navController)
+        }
+
         composable(
             route = Routes.EXPENSE_DETAIL,
             arguments = listOf(navArgument("expenseId") { type = NavType.LongType })
