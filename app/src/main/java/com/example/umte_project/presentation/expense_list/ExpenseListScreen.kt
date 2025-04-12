@@ -1,5 +1,6 @@
 package com.example.umte_project.presentation.expense_list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,18 +16,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.umte_project.domain.models.Expense
 import com.example.umte_project.domain.models.ExpenseWithCategory
+import com.example.umte_project.presentation.navigation.Routes
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun ExpenseListScreen(viewModel: ExpenseListViewModel = koinViewModel()) {
+fun ExpenseListScreen(
+    viewModel: ExpenseListViewModel = koinViewModel(),
+    navController: NavController
+) {
     val state by viewModel.state.collectAsState()
     Column {
         LazyColumn {
             items(state.expenses) { expense ->
-                ExpenseItem(expense = expense)
+                ExpenseItem(
+                    expense = expense,
+                    onClick = { navController.navigate(Routes.expenseDetail(expense.expense.id)) })
             }
         }
     }
@@ -34,11 +42,14 @@ fun ExpenseListScreen(viewModel: ExpenseListViewModel = koinViewModel()) {
 }
 
 @Composable
-fun ExpenseItem(expense: ExpenseWithCategory) {
+fun ExpenseItem(expense: ExpenseWithCategory, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
+            .clickable {
+                onClick()
+            }
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
