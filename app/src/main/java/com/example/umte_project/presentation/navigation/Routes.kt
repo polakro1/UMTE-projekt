@@ -15,7 +15,7 @@ object Routes {
         return "expense_detail/${expenseId}"
     }
 
-    fun addEditExpenseWithCategory(categoryId: Long): String {
-        return "add_edit_expense?selectedCategoryId=${categoryId}"
+    fun addExpenseWithCategory(categoryId: Long): String {
+        return "add_expense?selectedCategoryId=${categoryId}"
     }
 }
