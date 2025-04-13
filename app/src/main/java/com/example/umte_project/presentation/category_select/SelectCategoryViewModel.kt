@@ -64,11 +64,13 @@ class SelectCategoryViewModel(private val categoryUseCases: CategoryUseCases) : 
 
     }
 
-    fun onCategogySelected(category: Category) {
+    fun onCategorySelected(category: Category, onSave: () -> Unit) {
         _state.update {
             it.copy(
                 selectedCategory = category,
             )
         }
+
+        onSave()
     }
 }
