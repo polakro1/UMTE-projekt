@@ -40,7 +40,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AddEditCategoryScreen(
     navController: NavController,
-    categoryId: Long? = null, viewModel: AddEditCategoryViewModel = koinViewModel()
+    categoryId: Long? = null,
+    viewModel: AddEditCategoryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showEditSheet by remember { mutableStateOf(false) }
@@ -49,8 +50,7 @@ fun AddEditCategoryScreen(
 
     LaunchedEffect(Unit) {
         if (categoryId == null) viewModel.initNewCategory()
-        else
-            viewModel.getCategory(categoryId)
+        else viewModel.getCategory(categoryId)
     }
 
     when (val currentState = state) {
@@ -72,8 +72,7 @@ fun AddEditCategoryScreen(
                         currentState.selectedIcon,
                         currentState.selectedColor,
                         CategoryIconVariant.Large,
-                        onEditClick = { showEditSheet = true }
-                    )
+                        onEditClick = { showEditSheet = true })
                     Spacer(modifier = Modifier.height(32.dp))
                     OutlinedTextField(
                         value = currentState.name,
@@ -85,8 +84,7 @@ fun AddEditCategoryScreen(
 
                 Button(
                     onClick = ({ viewModel.saveCategory(onSave = { navController.popBackStack() }) }),
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Save")
                 }

@@ -56,7 +56,8 @@ class AddEditCategoryViewModel(private val categoryUseCases: CategoryUseCases) :
                             name = category.name,
                             selectedIcon = category.iconRes,
                             selectedColor = category.colorHex,
-                            isEditMode = true
+                            isEditMode = true,
+                            originalCategory = category
                         )
                     }
                 }
