@@ -24,7 +24,7 @@ fun getTopBarActionsForRoute(
             TopBarActions(
                 icon = Icons.Default.Add,
                 contentDescription = "Add category",
-                onClick = { TODO() }
+                onClick = { navController.navigate(Routes.ADD_CATEGORY) }
             )
         )
 

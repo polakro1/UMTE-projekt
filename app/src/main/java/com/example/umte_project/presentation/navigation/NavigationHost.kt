@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.umte_project.presentation.add_edit_category.AddEditCategoryScreen
 import com.example.umte_project.presentation.add_edit_expense.AddEditExpenseScreen
 import com.example.umte_project.presentation.category_select.SelectCategoryScreen
 import com.example.umte_project.presentation.expense_detail.ExpenseDetailScreen
@@ -44,6 +45,10 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
 
         composable(route = Routes.SELECT_CATEGORY) {
             SelectCategoryScreen(navController = navController)
+        }
+
+        composable(route = Routes.ADD_CATEGORY) {
+            AddEditCategoryScreen(navController)
         }
 
         composable(

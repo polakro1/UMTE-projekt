@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.umte_project.presentation.navigation.Routes
 import com.example.umte_project.presentation.ui_components.CategoryIcon
+import com.example.umte_project.presentation.ui_components.CategoryIconVariant
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -35,7 +36,7 @@ fun SelectCategoryScreen(
                     Row(
                         modifier = Modifier.clickable { viewModel.onCategogySelected(category) }
                     ) {
-                        CategoryIcon(category.iconRes)
+                        CategoryIcon(category.iconRes, category.colorHex, CategoryIconVariant.Small)
                         Text(category.name)
                         if (state.selectedCategory?.id == category.id) {
                             Text("Selected")

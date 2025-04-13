@@ -1,5 +1,6 @@
 package com.example.umte_project.di
 
+import com.example.umte_project.presentation.add_edit_category.AddEditCategoryViewModel
 import com.example.umte_project.presentation.add_edit_expense.AddEditExpenseViewModel
 import com.example.umte_project.presentation.category_select.SelectCategoryViewModel
 import com.example.umte_project.presentation.expense_detail.ExpenseDetailViewModel
@@ -13,4 +14,5 @@ val viewModelModule = module {
     viewModel { AddEditExpenseViewModel(get(), get()) }
     viewModel { ExpenseDetailViewModel(get()) }
     viewModel { SelectCategoryViewModel(get()) }
+    viewModel { AddEditCategoryViewModel(get()) }
 }
