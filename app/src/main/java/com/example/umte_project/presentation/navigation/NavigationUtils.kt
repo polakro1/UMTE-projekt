@@ -22,4 +22,13 @@ object NavigationUtils {
             else -> false
         }
     }
+
+    fun shouldShowBackButton(currentRoute: String?): Boolean {
+        return when (currentRoute) {
+            Routes.EXPENSE_LIST,
+                -> false
+
+            else -> true
+        }
+    }
 }
