@@ -303,7 +303,7 @@ fun AddEditExpenseScreen(
                         )
                         Box(modifier = Modifier.height(200.dp)) {
                             Map(
-                                initialLatLng = initialLatLng
+                                initialLatLng = initialLatLng!!
                             )
                         }
 
