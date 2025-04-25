@@ -3,8 +3,10 @@ package com.example.umte_project.presentation.ui_components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,13 +32,15 @@ fun SelectableFieldItem(
     color: Color,
     trailingText: String? = null,
     onClick: () -> Unit,
-    contentDescription: String
+    contentDescription: String,
+    descriptionText: String? = null,
+    trailingTextColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -56,16 +60,29 @@ fun SelectableFieldItem(
 
         Spacer(Modifier.width(16.dp))
 
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(1f)
-        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            descriptionText?.let {
+                Text(
+                    text = descriptionText,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+
 
         trailingText?.let {
             Text(
                 text = it,
-                color = MaterialTheme.colorScheme.error,
+                color = trailingTextColor,
                 style = MaterialTheme.typography.labelMedium
             )
         }

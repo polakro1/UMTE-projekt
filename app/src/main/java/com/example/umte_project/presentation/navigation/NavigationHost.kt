@@ -14,6 +14,7 @@ import com.example.umte_project.presentation.add_edit_expense.AddEditExpenseScre
 import com.example.umte_project.presentation.category_select.SelectCategoryScreen
 import com.example.umte_project.presentation.expense_detail.ExpenseDetailScreen
 import com.example.umte_project.presentation.expense_list.ExpenseListScreen
+import com.example.umte_project.presentation.select_location.SelectLocationScreen
 
 @Composable
 fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues) {
@@ -27,20 +28,6 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
         }
         composable(Routes.ADD_EXPENSE) {
             AddEditExpenseScreen(navController = navController)
-        }
-
-        composable(
-            route = Routes.ADD_EXPENSE_WITH_CATEGORY, arguments = listOf(
-                navArgument("selectedCategoryId") {
-                    type = NavType.StringType
-                    nullable = true
-                })
-        ) { navBackStackEntry ->
-            val categoryIdStr = navBackStackEntry.arguments?.getString("selectedCategoryId")
-            val selectedCategoryId = categoryIdStr?.toLongOrNull()
-            AddEditExpenseScreen(
-                navController = navController, selectedCategoryId = selectedCategoryId
-            )
         }
 
         composable(route = Routes.SELECT_CATEGORY) {
@@ -60,5 +47,10 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
                 ExpenseDetailScreen(expenseId = expenseId)
             }
         }
+
+        composable(route = Routes.SELECT_LOCATION) {
+            SelectLocationScreen(navController = navController)
+        }
+
     }
 }

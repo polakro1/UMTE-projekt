@@ -1,12 +1,13 @@
 package com.example.umte_project.presentation.add_edit_expense
 
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,14 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.AddLocation
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Today
@@ -33,8 +31,6 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -52,13 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -67,38 +57,35 @@ import com.example.umte_project.presentation.ui_components.AmountInput
 import com.example.umte_project.presentation.ui_components.CategoryListItem
 import com.example.umte_project.presentation.ui_components.ConfirmButton
 import com.example.umte_project.presentation.ui_components.SelectableFieldItem
+import com.google.android.gms.maps.model.LatLng
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import com.example.umte_project.domain.models.Category
+import com.example.umte_project.presentation.ui_components.Map
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditExpenseScreen(
-    selectedCategoryId: Long? = null,
     expenseId: Long? = null,
     navController: NavController,
     viewModel: AddEditExpenseViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        if (selectedCategoryId != null) {
-            viewModel.loadCategoryById(selectedCategoryId)
-        } else if (expenseId != null) {
-            viewModel.getExpense(expenseId)
-        } else {
-            viewModel.initNewExpense()
-        }
-    }
-
     when (val state = state) {
         is AddEditExpenseState.Loading -> CircularProgressIndicator()
         is AddEditExpenseState.Error -> Text(state.message)
         is AddEditExpenseState.Saved -> {}
         is AddEditExpenseState.Success -> {
+            val navBackStackEntry = remember { navController.currentBackStackEntry }
+            val savedStateHandle = navBackStackEntry?.savedStateHandle
             val scrollState = rememberScrollState()
             var showDatePicker by remember { mutableStateOf(false) }
             var showTimePicker by remember { mutableStateOf(false) }
@@ -109,6 +96,29 @@ fun AddEditExpenseScreen(
                 initialMinute = state.createdAt.minute,
                 is24Hour = true
             )
+            val initialLatLng: LatLng? = state.latitude?.let { lat ->
+                state.longitude?.let { lng ->
+                    LatLng(lat, lng)
+                }
+            }
+
+            LaunchedEffect(savedStateHandle) {
+                savedStateHandle?.getLiveData<Category>("selected_category")
+                    ?.observeForever { category ->
+                        if (category != null) {
+                            viewModel.onCategoryChange(category)
+                            savedStateHandle.remove<Category>("selected_category")
+                        }
+                    }
+
+                savedStateHandle?.getLiveData<LatLng>("selected_location")
+                    ?.observeForever { latLng ->
+                        if (latLng != null) {
+                            viewModel.onLocationSelected(latLng)
+                            savedStateHandle.remove<LatLng>("selected_location")
+                        }
+                    }
+            }
 
             LaunchedEffect(datePickerState.selectedDateMillis) {
                 datePickerState.selectedDateMillis?.let { millis ->
@@ -145,7 +155,8 @@ fun AddEditExpenseScreen(
                             color = Color.Gray,
                             onClick = { navController.navigate(Routes.SELECT_CATEGORY) },
                             trailingText = "Required",
-                            contentDescription = "Select category"
+                            contentDescription = "Select category",
+                            trailingTextColor = MaterialTheme.colorScheme.error
                         )
                     }
 
@@ -269,6 +280,34 @@ fun AddEditExpenseScreen(
                         .height(200.dp)
                 )
 
+                HorizontalDivider()
+
+                if ((state.longitude == null) || (state.latitude == null)) {
+                    SelectableFieldItem(
+                        label = "Location",
+                        icon = Icons.Default.AddLocation,
+                        color = Color.Gray,
+                        trailingText = "Optional",
+                        onClick = { navController.navigate("select_location") },
+                        contentDescription = "Select location"
+                    )
+                } else {
+                    SelectableFieldItem(
+                        label = "Location",
+                        icon = Icons.Default.AddLocation,
+                        color = Color.Gray,
+                        trailingText = "Change",
+                        onClick = { navController.navigate("select_location") },
+                        contentDescription = "Select location",
+                        descriptionText = "${state.latitude}, ${state.longitude}"
+                    )
+                    Box(modifier = Modifier.height(200.dp)) {
+                        Map(
+                            initialLatLng = initialLatLng
+                        )
+                    }
+
+                }
 
                 Column(
                     modifier = Modifier

@@ -10,6 +10,7 @@ import com.example.umte_project.domain.usecase.category.CategoryUseCases
 import com.example.umte_project.domain.usecase.expense.ExpenseUseCases
 import com.example.umte_project.domain.utils.Resource
 import com.example.umte_project.presentation.add_edit_category.AddEditCategoryState
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
+import kotlin.math.log
 
 sealed interface AddEditExpenseState {
     data object Loading : AddEditExpenseState
@@ -29,8 +31,8 @@ sealed interface AddEditExpenseState {
         val categoryId: Long = 0,
         val selectedCategory: Category? = null,
         val note: String = "",
-        val latitude: String = "",
-        val longitude: String = "",
+        val latitude: Double? = null,
+        val longitude: Double? = null,
         val isSaving: Boolean = false,
         val savingError: String? = null,
     ) : AddEditExpenseState
@@ -44,6 +46,16 @@ class AddEditExpenseViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow<AddEditExpenseState>(AddEditExpenseState.Loading)
     val state: StateFlow<AddEditExpenseState> = _state.asStateFlow()
+
+    private var initialized = false
+
+    ////////////////////
+    init {
+        if (initialized) else {
+            initNewExpense()
+            initialized = true
+        }
+    }
 
     fun initNewExpense() {
         _state.update { AddEditExpenseState.Success(isEditMode = false) }
@@ -66,8 +78,8 @@ class AddEditExpenseViewModel(
                             createdAt = expenseWithCategory.expense.createdAt,
                             categoryId = expenseWithCategory.expense.categoryId,
                             note = expenseWithCategory.expense.note ?: "",
-                            latitude = expenseWithCategory.expense.latitude?.toString() ?: "",
-                            longitude = expenseWithCategory.expense.longitude?.toString() ?: "",
+                            latitude = expenseWithCategory.expense.latitude,
+                            longitude = expenseWithCategory.expense.longitude,
                             isEditMode = true,
                             originalExpense = expenseWithCategory,
                             selectedCategory = expenseWithCategory.category
@@ -130,6 +142,13 @@ class AddEditExpenseViewModel(
         }
     }
 
+    fun onCategoryChange(newCategory: Category) {
+        val currentState = _state.value
+        if (currentState is AddEditExpenseState.Success) {
+            _state.update { currentState.copy(selectedCategory = newCategory) }
+        }
+    }
+
     fun onNoteChanged(newNote: String) {
         val currentState = _state.value
         if (currentState is AddEditExpenseState.Success) {
@@ -137,17 +156,15 @@ class AddEditExpenseViewModel(
         }
     }
 
-    fun onLatitudeChange(newLatitude: String) {
+    fun onLocationSelected(latLng: LatLng) {
         val currentState = _state.value
         if (currentState is AddEditExpenseState.Success) {
-            _state.update { currentState.copy(latitude = newLatitude) }
-        }
-    }
-
-    fun onLongitudeChange(newLongitude: String) {
-        val currentState = _state.value
-        if (currentState is AddEditExpenseState.Success) {
-            _state.update { currentState.copy(longitude = newLongitude) }
+            _state.update {
+                currentState.copy(
+                    latitude = latLng.latitude,
+                    longitude = latLng.longitude
+                )
+            }
         }
     }
 
@@ -176,8 +193,8 @@ class AddEditExpenseViewModel(
                     createdAt = currentState.createdAt,
                     categoryId = currentState.selectedCategory?.id ?: return@launch,
                     note = if (currentState.note.isBlank()) null else currentState.note,
-                    longitude = if (currentState.longitude.isBlank()) null else currentState.longitude.toDoubleOrNull(),
-                    latitude = if (currentState.latitude.isBlank()) null else currentState.latitude.toDoubleOrNull()
+                    longitude = currentState.longitude,
+                    latitude = currentState.latitude
                 )
 
                 expenseUseCases.addExpense(expense)
