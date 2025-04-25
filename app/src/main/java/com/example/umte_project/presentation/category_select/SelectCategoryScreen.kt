@@ -1,6 +1,7 @@
 package com.example.umte_project.presentation.category_select
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.umte_project.presentation.navigation.Routes
@@ -26,18 +29,15 @@ fun SelectCategoryScreen(
     LaunchedEffect(Unit) {
         viewModel.loadCategories()
     }
-    LazyColumn {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         items(state.categories) { category ->
             CategoryListItem(
                 category = category,
                 onClick = {
-                    viewModel.onCategorySelected(category, onSave = {
-                        navController.navigate(Routes.addExpenseWithCategory(category.id)) {
-                            popUpTo(Routes.ADD_EXPENSE) {
-                                inclusive = true
-                            }
-                        }
-                    })
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("selected_category", category)
+                    navController.popBackStack()
                 })
         }
     }
