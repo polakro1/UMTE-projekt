@@ -10,6 +10,7 @@ object NavigationUtils {
             route.startsWith(Routes.EXPENSE_DETAIL) -> "Expense Detail"
             route.startsWith(Routes.SELECT_CATEGORY) -> "Select Category"
             route.startsWith(Routes.ADD_CATEGORY) -> "Add Category"
+            route.startsWith(Routes.SELECT_LOCATION) -> "Select Location"
             else -> ""
         }
     }

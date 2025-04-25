@@ -48,9 +48,12 @@ secrets {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.accompanist.permissions)
     //Google Maps
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
