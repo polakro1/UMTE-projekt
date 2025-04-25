@@ -25,7 +25,8 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun Map(
-    initialLatLng: LatLng? = null
+    initialLatLng: LatLng? = null,
+    onLocationSelected: (LatLng) -> Unit = {}
 ) {
     val currentLocation = rememberCurrentLocationWithPermission()
     val fallback = LatLng(50.0755, 14.4378) // fallback na Prahu
@@ -41,9 +42,11 @@ fun Map(
 
 
     LaunchedEffect(currentLocation) {
-        currentLocation?.let {
-            cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(it, 14f))
-            selectedPosition = it
+        if (initialLatLng == null) {
+            currentLocation?.let {
+                cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(it, 14f))
+                selectedPosition = it
+            }
         }
     }
 
@@ -54,6 +57,7 @@ fun Map(
         cameraPositionState = cameraPositionState,
         onMapClick = { latLng ->
             selectedPosition = latLng
+            onLocationSelected(latLng)
         }
     ) {
         Marker(state = MarkerState(position = selectedPosition))

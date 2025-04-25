@@ -28,19 +28,16 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun SelectLocationScreen(
-    initialLatLng: LatLng? = null,
     navController: NavController
 ) {
     var selectedPosition by remember {
-        mutableStateOf(initialLatLng ?: LatLng(50.0755, 14.4378))
-    }
-
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(selectedPosition, 14f)
+        mutableStateOf<LatLng?>(null)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Map(initialLatLng = selectedPosition)
+        Map(
+            onLocationSelected = { selectedPosition = it }
+        )
 
         ConfirmButton(
             text = "Save location",
