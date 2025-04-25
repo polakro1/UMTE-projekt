@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,7 +23,6 @@ import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -65,9 +63,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import com.example.umte_project.domain.models.Category
 import com.example.umte_project.presentation.ui_components.Map
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,197 +130,195 @@ fun AddEditExpenseScreen(
             }
 
 
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                AmountInput(
-                    amountText = state.amount,
-                    onAmountChange = { viewModel.onAmountChange(it) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                when (state.selectedCategory) {
-                    null -> {
-                        SelectableFieldItem(
-                            label = "Category",
-                            icon = Icons.Default.QuestionMark,
-                            color = Color.Gray,
-                            onClick = { navController.navigate(Routes.SELECT_CATEGORY) },
-                            trailingText = "Required",
-                            contentDescription = "Select category",
-                            trailingTextColor = MaterialTheme.colorScheme.error
-                        )
-                    }
-
-                    else -> {
-                        CategoryListItem(
-                            category = state.selectedCategory,
-                            onClick = { navController.navigate(Routes.SELECT_CATEGORY) },
-                            trailingContent = {
-                                Icon(
-                                    imageVector = Icons.Default.ChevronRight,
-                                    contentDescription = "Select category"
-                                )
-                            })
-                    }
-                }
-
-                HorizontalDivider()
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp, 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                            .clickable {
-                                showDatePicker = !showDatePicker
-                                showTimePicker = false
-                            }
-                            .padding(10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Today,
-                            contentDescription = "Select Time",
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Text(
-                            text = state.createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                            .clickable {
-                                showTimePicker = !showTimePicker
-                                showDatePicker = false
-                            }
-                            .padding(10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Schedule,
-                            contentDescription = "Select Time",
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Text(text = state.createdAt.format(DateTimeFormatter.ofPattern("HH:mm")))
-                    }
-                }
-                if (showDatePicker) {
-                    DatePickerDialog(
-                        onDismissRequest = { showDatePicker = false },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                viewModel.onCreatedAtChange(
-                                    state.createdAt.with(
-                                        Instant.ofEpochMilli(
-                                            datePickerState.selectedDateMillis!!
-                                        ).atZone(ZoneId.systemDefault()).toLocalDate()
-                                    )
-                                )
-                                showDatePicker = false
-                            }) { Text("OK") }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showDatePicker = false }) {
-                                Text("Cancel")
-                            }
-                        }) {
-                        DatePicker(state = datePickerState)
-                    }
-                }
-                if (showTimePicker) {
-                    AlertDialog(onDismissRequest = { showTimePicker = false }, dismissButton = {
-                        TextButton(onClick = { showTimePicker = false }) {
-                            Text("Cancel")
-                        }
-                    }, confirmButton = {
-                        TextButton(onClick = {
-                            viewModel.onCreatedAtChange(
-                                state.createdAt.with(
-                                    LocalTime.of(timePickerState.hour, timePickerState.minute)
-                                )
-                            )
-                            showTimePicker = false
-                        }) { Text("OK") }
-                    }, text = {
-                        TimePicker(timePickerState)
-                    })
-                }
-
-                OutlinedTextField(
-                    value = state.note,
-                    onValueChange = { viewModel.onNoteChanged(it) },
-                    label = { Text("Note") },
-                    singleLine = false,
-                    maxLines = 5,
-                    keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp, 0.dp)
-                        .height(200.dp)
-                )
-
-                HorizontalDivider()
-
-                if ((state.longitude == null) || (state.latitude == null)) {
-                    SelectableFieldItem(
-                        label = "Location",
-                        icon = Icons.Default.AddLocation,
-                        color = Color.Gray,
-                        trailingText = "Optional",
-                        onClick = { navController.navigate("select_location") },
-                        contentDescription = "Select location"
-                    )
-                } else {
-                    SelectableFieldItem(
-                        label = "Location",
-                        icon = Icons.Default.AddLocation,
-                        color = Color.Gray,
-                        trailingText = "Change",
-                        onClick = { navController.navigate("select_location") },
-                        contentDescription = "Select location",
-                        descriptionText = "${state.latitude}, ${state.longitude}"
-                    )
-                    Box(modifier = Modifier.height(200.dp)) {
-                        Map(
-                            initialLatLng = initialLatLng
-                        )
-                    }
-
-                }
-
+            )
+            {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .weight(1f),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .verticalScroll(scrollState),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    ConfirmButton(
-                        text = "Save",
-                        onClick = { viewModel.saveExpense { navController.popBackStack() } },
-                        isLoading = state.isSaving,
-                        enabled = true,
+                    AmountInput(
+                        amountText = state.amount,
+                        onAmountChange = { viewModel.onAmountChange(it) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    when (state.selectedCategory) {
+                        null -> {
+                            SelectableFieldItem(
+                                label = "Category",
+                                icon = Icons.Default.QuestionMark,
+                                color = Color.Gray,
+                                onClick = { navController.navigate(Routes.SELECT_CATEGORY) },
+                                trailingText = "Required",
+                                contentDescription = "Select category",
+                                trailingTextColor = MaterialTheme.colorScheme.error
+                            )
+                        }
+
+                        else -> {
+                            CategoryListItem(
+                                category = state.selectedCategory,
+                                onClick = { navController.navigate(Routes.SELECT_CATEGORY) },
+                                trailingContent = {
+                                    Icon(
+                                        imageVector = Icons.Default.ChevronRight,
+                                        contentDescription = "Select category"
+                                    )
+                                })
+                        }
+                    }
+
+                    HorizontalDivider()
+
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp)
+                            .padding(20.dp, 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .clickable {
+                                    showDatePicker = !showDatePicker
+                                    showTimePicker = false
+                                }
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Today,
+                                contentDescription = "Select Time",
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Text(
+                                text = state.createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .clickable {
+                                    showTimePicker = !showTimePicker
+                                    showDatePicker = false
+                                }
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Schedule,
+                                contentDescription = "Select Time",
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Text(text = state.createdAt.format(DateTimeFormatter.ofPattern("HH:mm")))
+                        }
+                    }
+                    if (showDatePicker) {
+                        DatePickerDialog(
+                            onDismissRequest = { showDatePicker = false },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    viewModel.onCreatedAtChange(
+                                        state.createdAt.with(
+                                            Instant.ofEpochMilli(
+                                                datePickerState.selectedDateMillis!!
+                                            ).atZone(ZoneId.systemDefault()).toLocalDate()
+                                        )
+                                    )
+                                    showDatePicker = false
+                                }) { Text("OK") }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showDatePicker = false }) {
+                                    Text("Cancel")
+                                }
+                            }) {
+                            DatePicker(state = datePickerState)
+                        }
+                    }
+                    if (showTimePicker) {
+                        AlertDialog(onDismissRequest = { showTimePicker = false }, dismissButton = {
+                            TextButton(onClick = { showTimePicker = false }) {
+                                Text("Cancel")
+                            }
+                        }, confirmButton = {
+                            TextButton(onClick = {
+                                viewModel.onCreatedAtChange(
+                                    state.createdAt.with(
+                                        LocalTime.of(timePickerState.hour, timePickerState.minute)
+                                    )
+                                )
+                                showTimePicker = false
+                            }) { Text("OK") }
+                        }, text = {
+                            TimePicker(timePickerState)
+                        })
+                    }
+
+                    OutlinedTextField(
+                        value = state.note,
+                        onValueChange = { viewModel.onNoteChanged(it) },
+                        label = { Text("Note") },
+                        singleLine = false,
+                        maxLines = 5,
+                        keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp, 0.dp)
+                            .height(200.dp)
                     )
+
+                    HorizontalDivider()
+
+                    if ((state.longitude == null) || (state.latitude == null)) {
+                        SelectableFieldItem(
+                            label = "Location",
+                            icon = Icons.Default.AddLocation,
+                            color = Color.Gray,
+                            trailingText = "Optional",
+                            onClick = { navController.navigate("select_location") },
+                            contentDescription = "Select location"
+                        )
+                    } else {
+                        SelectableFieldItem(
+                            label = "Location",
+                            icon = Icons.Default.AddLocation,
+                            color = Color.Gray,
+                            trailingText = "Change",
+                            onClick = { navController.navigate("select_location") },
+                            contentDescription = "Select location",
+                            descriptionText = "${state.latitude}, ${state.longitude}"
+                        )
+                        Box(modifier = Modifier.height(200.dp)) {
+                            Map(
+                                initialLatLng = initialLatLng
+                            )
+                        }
+
+                    }
                 }
+                ConfirmButton(
+                    text = "Save",
+                    onClick = { viewModel.saveExpense { navController.popBackStack() } },
+                    isLoading = state.isSaving,
+                    enabled = true,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
+                        .fillMaxWidth()
+                )
             }
         }
     }
