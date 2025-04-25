@@ -38,10 +38,13 @@ fun rememberCurrentLocationWithPermission(): LatLng? {
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
-                    val location = client.getCurrentLocation(
-                        com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
-                        null
-                    ).await()
+                    var location = client.getLastLocation().await()
+                    if (location == null) {
+                        location = client.getCurrentLocation(
+                            com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
+                            null
+                        ).await()
+                    }
                     if (location != null) {
                         currentLocation = LatLng(location.latitude, location.longitude)
                     }
