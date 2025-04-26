@@ -34,7 +34,7 @@ fun CategoryIcon(
 
     val (iconSize, backgroundSize) = when (variant) {
         CategoryIconVariant.Small -> 26.dp to 36.dp
-        CategoryIconVariant.Medium -> 32.dp to 48.dp
+        CategoryIconVariant.Medium -> 28.dp to 48.dp
         CategoryIconVariant.Large -> 100.dp to 150.dp
     }
     val backgroundColor = remember(colorHex) {
