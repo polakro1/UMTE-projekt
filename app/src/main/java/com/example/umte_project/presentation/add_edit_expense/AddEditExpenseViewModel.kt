@@ -42,7 +42,7 @@ sealed interface AddEditExpenseState {
 }
 
 class AddEditExpenseViewModel(
-    private val expenseUseCases: ExpenseUseCases, private val categoryUseCases: CategoryUseCases
+    private val expenseUseCases: ExpenseUseCases
 ) : ViewModel() {
     private val _state = MutableStateFlow<AddEditExpenseState>(AddEditExpenseState.Loading)
     val state: StateFlow<AddEditExpenseState> = _state.asStateFlow()
@@ -85,31 +85,6 @@ class AddEditExpenseViewModel(
                 is Resource.Error -> {
                     _state.update {
                         AddEditExpenseState.Error(result.message)
-                    }
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    fun loadCategoryById(id: Long) {
-        categoryUseCases.getCategory(id).onEach { result ->
-
-            when (result) {
-                is Resource.Loading -> {
-                    _state.update { AddEditExpenseState.Loading }
-                }
-
-                is Resource.Error -> {
-                    _state.update {
-                        AddEditExpenseState.Error(result.message)
-                    }
-                }
-
-                is Resource.Success -> {
-                    _state.update {
-                        AddEditExpenseState.Success(
-                            selectedCategory = result.data, isEditMode = false
-                        )
                     }
                 }
             }
