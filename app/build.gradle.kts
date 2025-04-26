@@ -48,6 +48,9 @@ secrets {
 }
 
 dependencies {
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.biometric)
+
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.accompanist.permissions)
     //Google Maps
