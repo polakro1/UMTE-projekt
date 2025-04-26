@@ -15,6 +15,7 @@ import com.example.umte_project.presentation.category_select.SelectCategoryScree
 import com.example.umte_project.presentation.expense_detail.ExpenseDetailScreen
 import com.example.umte_project.presentation.expense_list.ExpenseListScreen
 import com.example.umte_project.presentation.select_location.SelectLocationScreen
+import com.example.umte_project.presentation.settings.SettingsScreen
 
 @Composable
 fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues) {
@@ -50,6 +51,10 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
 
         composable(route = Routes.SELECT_LOCATION) {
             SelectLocationScreen(navController = navController)
+        }
+
+        composable(route = Routes.SETTINGS) {
+            SettingsScreen()
         }
 
     }
