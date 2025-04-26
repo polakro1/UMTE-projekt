@@ -6,6 +6,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -115,17 +116,20 @@ fun MainScreen() {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate(Routes.ADD_EXPENSE) {
-                    navController.graph.startDestinationRoute?.let { screenRoute ->
-                        popUpTo(screenRoute) {
-                            saveState = true
+            if (NavigationUtils.shouldShowFab(currentRoute)) {
+                FloatingActionButton(onClick = {
+                    navController.navigate(Routes.ADD_EXPENSE) {
+                        navController.graph.startDestinationRoute?.let { screenRoute ->
+                            popUpTo(screenRoute) {
+                                saveState = true
+                            }
                         }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
-            }) { }
+                ) { Icon(Icons.Default.Add, contentDescription = "Add expense") }
+            }
         },
         bottomBar = {
             BottomNavigationBar(navController = navController, currentRoute = currentRoute)

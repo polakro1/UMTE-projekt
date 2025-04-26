@@ -34,4 +34,13 @@ object NavigationUtils {
             else -> true
         }
     }
+
+    fun shouldShowFab(currentRoute: String?): Boolean {
+        return when (currentRoute) {
+            Routes.DASHBOARD,
+            Routes.EXPENSE_LIST -> true
+
+            else -> false
+        }
+    }
 }
