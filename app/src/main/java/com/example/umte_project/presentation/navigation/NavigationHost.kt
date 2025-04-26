@@ -22,7 +22,7 @@ import com.example.umte_project.presentation.settings.SettingsScreen
 fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = Routes.EXPENSE_LIST,
+        startDestination = Routes.DASHBOARD,
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(Routes.EXPENSE_LIST) {

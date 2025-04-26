@@ -17,6 +17,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
@@ -25,10 +26,12 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.umte_project.data.datastore.PreferenceManager
 import com.example.umte_project.presentation.navigation.NavigationHost
 import com.example.umte_project.presentation.navigation.NavigationUtils
 import com.example.umte_project.presentation.navigation.Routes
 import com.example.umte_project.presentation.navigation.getTopBarActionsForRoute
+import com.example.umte_project.presentation.ui_components.BottomNavigationBar
 import com.example.umte_project.utils.BiometricAuthManager
 import com.example.umte_project.utils.findActivity
 import com.example.umte_project.utils.findFragmentActivity
@@ -44,32 +47,40 @@ fun MainScreen() {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
-        BiometricAuthManager.authenticate(
-            context = context,
-            onSuccess = {
+    val biometricEnabledFlow = PreferenceManager.getBiometricEnabled(context)
+    val biometricEnabled by biometricEnabledFlow.collectAsState(initial = false)
 
-            },
-            onFailure = {
-                Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show()
-                context.findFragmentActivity()?.finishAffinity()
-            }
-        )
+    LaunchedEffect(Unit) {
+        if (biometricEnabled) {
+            BiometricAuthManager.authenticate(
+                context = context,
+                onSuccess = {
+
+                },
+                onFailure = {
+                    Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show()
+                    context.findFragmentActivity()?.finishAffinity()
+                }
+            )
+        }
     }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                BiometricAuthManager.authenticate(
-                    context = context,
-                    onSuccess = {
-                        // Ověření úspěšné
-                    },
-                    onFailure = {
-                        Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show()
-                        context.findFragmentActivity()?.finishAffinity()
-                    }
-                )
+                if (biometricEnabled) {
+                    BiometricAuthManager.authenticate(
+                        context = context,
+                        onSuccess = {
+                            // Ověření úspěšné
+                        },
+                        onFailure = {
+                            Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT)
+                                .show()
+                            context.findFragmentActivity()?.finishAffinity()
+                        }
+                    )
+                }
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -115,6 +126,9 @@ fun MainScreen() {
                     restoreState = true
                 }
             }) { }
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController, currentRoute = currentRoute)
         }
     ) { innerPadding ->
         NavigationHost(navController, innerPadding)
