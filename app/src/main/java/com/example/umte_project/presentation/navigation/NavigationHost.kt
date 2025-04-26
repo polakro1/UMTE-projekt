@@ -13,7 +13,6 @@ import com.example.umte_project.presentation.add_edit_category.AddEditCategorySc
 import com.example.umte_project.presentation.add_edit_expense.AddEditExpenseScreen
 import com.example.umte_project.presentation.category_select.SelectCategoryScreen
 import com.example.umte_project.presentation.dashboard.DashboardScreen
-import com.example.umte_project.presentation.expense_detail.ExpenseDetailScreen
 import com.example.umte_project.presentation.expense_list.ExpenseListScreen
 import com.example.umte_project.presentation.select_location.SelectLocationScreen
 import com.example.umte_project.presentation.settings.SettingsScreen
