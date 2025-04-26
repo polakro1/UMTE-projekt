@@ -46,7 +46,7 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
         ) { navBackStackEntry ->
             val expenseId = navBackStackEntry.arguments?.getLong("expenseId")
             if (expenseId != null) {
-                ExpenseDetailScreen(expenseId = expenseId)
+                AddEditExpenseScreen(navController = navController, expenseId = expenseId)
             }
         }
 

@@ -74,6 +74,10 @@ fun AddEditExpenseScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        if (expenseId == null) viewModel.initNewExpense() else viewModel.getExpense(expenseId)
+    }
+
     when (val state = state) {
         is AddEditExpenseState.Loading -> CircularProgressIndicator()
         is AddEditExpenseState.Error -> Text(state.message)

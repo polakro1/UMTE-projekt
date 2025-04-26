@@ -47,22 +47,17 @@ class AddEditExpenseViewModel(
     private val _state = MutableStateFlow<AddEditExpenseState>(AddEditExpenseState.Loading)
     val state: StateFlow<AddEditExpenseState> = _state.asStateFlow()
 
-    private var initialized = false
-
-    ////////////////////
-    init {
-        if (initialized) else {
-            initNewExpense()
-            initialized = true
-        }
-    }
+    var isInitialized: Boolean = false
 
     fun initNewExpense() {
+        if (isInitialized) return
         _state.update { AddEditExpenseState.Success(isEditMode = false) }
-
+        isInitialized = true
     }
 
     fun getExpense(id: Long) {
+        if (isInitialized) return
+        isInitialized = true
         expenseUseCases.getExpenseWithCategory(id).onEach { result ->
 
             when (result) {
