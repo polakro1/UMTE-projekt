@@ -12,6 +12,7 @@ object NavigationUtils {
             route.startsWith(Routes.ADD_CATEGORY) -> "Add Category"
             route.startsWith(Routes.SELECT_LOCATION) -> "Select Location"
             route.startsWith(Routes.SETTINGS) -> "Settings"
+            route.startsWith(Routes.DASHBOARD) -> "Dashboard"
             else -> ""
         }
     }
@@ -27,6 +28,7 @@ object NavigationUtils {
     fun shouldShowBackButton(currentRoute: String?): Boolean {
         return when (currentRoute) {
             Routes.EXPENSE_LIST,
+            Routes.DASHBOARD
                 -> false
 
             else -> true

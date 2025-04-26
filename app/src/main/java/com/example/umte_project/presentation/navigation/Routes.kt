@@ -9,6 +9,7 @@ object Routes {
     const val EDIT_CATEGORY = "edit_category?categoryId={categoryId}"
     const val SELECT_LOCATION = "select_location"
     const val SETTINGS = "settings"
+    const val DASHBOARD = "dashboard"
 
 
     fun expenseDetail(expenseId: Long): String {
