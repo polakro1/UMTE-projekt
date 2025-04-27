@@ -64,7 +64,7 @@ fun AmountInput(
         decorationBox = { innerTextField ->
             Box(
                 modifier = modifier
-                    .background(MaterialTheme.colorScheme.surfaceDim)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(15.dp, 4.dp)
             ) {
                 innerTextField()

@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddLocation
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Today
@@ -189,7 +190,7 @@ fun AddEditExpenseScreen(
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .background(MaterialTheme.colorScheme.secondaryContainer)
                                 .clickable {
                                     showDatePicker = !showDatePicker
                                     showTimePicker = false
@@ -205,14 +206,14 @@ fun AddEditExpenseScreen(
                             )
                             Text(
                                 text = state.createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                style = MaterialTheme.typography.bodyLarge
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         }
 
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .background(MaterialTheme.colorScheme.secondaryContainer)
                                 .clickable {
                                     showTimePicker = !showTimePicker
                                     showDatePicker = false
@@ -226,7 +227,10 @@ fun AddEditExpenseScreen(
                                 contentDescription = "Select Time",
                                 modifier = Modifier.size(32.dp)
                             )
-                            Text(text = state.createdAt.format(DateTimeFormatter.ofPattern("HH:mm")))
+                            Text(
+                                text = state.createdAt.format(DateTimeFormatter.ofPattern("HH:mm")),
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
                         }
                     }
                     if (showDatePicker) {
@@ -289,7 +293,7 @@ fun AddEditExpenseScreen(
                     if ((state.longitude == null) || (state.latitude == null)) {
                         SelectableFieldItem(
                             label = "Location",
-                            icon = Icons.Default.AddLocation,
+                            icon = Icons.Default.LocationOn,
                             color = Color.Gray,
                             trailingText = "Optional",
                             onClick = { navController.navigate("select_location") },
@@ -298,7 +302,7 @@ fun AddEditExpenseScreen(
                     } else {
                         SelectableFieldItem(
                             label = "Location",
-                            icon = Icons.Default.AddLocation,
+                            icon = Icons.Default.LocationOn,
                             color = Color.Gray,
                             trailingText = "Change",
                             onClick = { navController.navigate("select_location") },
