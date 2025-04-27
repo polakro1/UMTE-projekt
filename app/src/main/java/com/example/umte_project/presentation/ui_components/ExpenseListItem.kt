@@ -25,8 +25,7 @@ fun ExpenseListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick(expense) }
-            .padding(horizontal = 16.dp),
+            .clickable { onClick(expense) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         CategoryIcon(

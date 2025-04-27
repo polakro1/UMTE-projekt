@@ -1,5 +1,6 @@
 package com.example.umte_project.presentation.dashboard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,20 +9,29 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import com.example.umte_project.presentation.navigation.Routes
+import com.example.umte_project.presentation.ui_components.ExpenseList
 import com.example.umte_project.presentation.ui_components.ExpenseListItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DashboardScreen(
+    navController: NavController,
     viewModel: DashboardViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -61,11 +71,10 @@ fun DashboardScreen(
                 Text(text = "Poslední výdaje:", style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(8.dp))
 
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.recentExpenses) { expense ->
-                        ExpenseListItem(expense = expense, onClick = {})
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    ExpenseList(expenses = state.recentExpenses)
+                    TextButton(onClick = { navController.navigate(Routes.EXPENSE_LIST) }) {
+                        Text(text = "See more")
                     }
                 }
             }

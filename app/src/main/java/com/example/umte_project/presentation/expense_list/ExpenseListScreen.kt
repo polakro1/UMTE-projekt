@@ -2,6 +2,7 @@ package com.example.umte_project.presentation.expense_list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import androidx.navigation.NavController
 import com.example.umte_project.domain.models.Expense
 import com.example.umte_project.domain.models.ExpenseWithCategory
 import com.example.umte_project.presentation.navigation.Routes
+import com.example.umte_project.presentation.ui_components.ExpenseList
 import com.example.umte_project.presentation.ui_components.ExpenseListItem
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
@@ -32,48 +34,7 @@ fun ExpenseListScreen(
     navController: NavController
 ) {
     val state by viewModel.state.collectAsState()
-
-    LazyColumn(userScrollEnabled = true) {
-        items(state.expenses) { expense ->
-            ExpenseListItem(
-                expense = expense,
-                onClick = { navController.navigate(Routes.expenseDetail(expense.expense.id)) })
-
-            if (expense != state.expenses.last()) {
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 8.dp),
-                    color = MaterialTheme.colorScheme.surfaceDim
-                )
-            }
-        }
+    Box(modifier = Modifier.padding(16.dp)) {
+        ExpenseList(expenses = state.expenses)
     }
-}
-
-@Composable
-fun ExpenseItem(expense: ExpenseWithCategory, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp)
-            .clickable {
-                onClick()
-            }
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp)
-        ) {
-            Column {
-                Text(text = expense.category.name)
-                Text(text = expense.expense.note ?: "")
-            }
-            Column {
-                Text(text = expense.expense.amount.toString())
-                Text(text = expense.expense.createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")))
-            }
-        }
-    }
-
 }

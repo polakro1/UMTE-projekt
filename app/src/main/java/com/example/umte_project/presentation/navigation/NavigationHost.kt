@@ -58,7 +58,7 @@ fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues
         }
 
         composable(route = Routes.DASHBOARD) {
-            DashboardScreen()
+            DashboardScreen(navController = navController)
         }
 
     }
