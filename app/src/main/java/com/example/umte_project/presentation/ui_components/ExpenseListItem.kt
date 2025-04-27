@@ -29,7 +29,7 @@ fun ExpenseListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         CategoryIcon(
-            iconName = expense.category.name,
+            iconName = expense.category.iconRes,
             colorHex = expense.category.colorHex,
             variant = CategoryIconVariant.Medium
         )

@@ -34,7 +34,7 @@ fun CategoryListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         CategoryIcon(
-            iconName = category.name,
+            iconName = category.iconRes,
             colorHex = category.colorHex,
             variant = CategoryIconVariant.Medium
         )
