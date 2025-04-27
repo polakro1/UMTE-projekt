@@ -19,9 +19,10 @@ sealed interface DashboardState {
     data object Loading : DashboardState
 
     data class Success(
-        val monthlyExpenses: Double?,
-        val todaysExpenses: Double?,
-        val recentExpenses: List<ExpenseWithCategory>
+        val spendThisMonth: Double,
+        val todaysExpenses: Double,
+        val recentExpenses: List<ExpenseWithCategory>,
+        val avgDailyThisMonnth: Double
     ) : DashboardState
 
     data object Saved : DashboardState
@@ -51,7 +52,8 @@ class DashboardViewModel(private val expenseUseCases: ExpenseUseCases) : ViewMod
 
                     val monthlyExpenses = allExpenses
                         .filter { YearMonth.from(it.expense.createdAt.toLocalDate()) == currentMonth }
-                        .sumOf { it.expense.amount }
+
+                    val spendThisMonth = monthlyExpenses.sumOf { it.expense.amount }
 
                     val todaysExpenses = allExpenses
                         .filter { it.expense.createdAt.toLocalDate() == today }
@@ -61,11 +63,15 @@ class DashboardViewModel(private val expenseUseCases: ExpenseUseCases) : ViewMod
                         .sortedByDescending { it.expense.createdAt }
                         .take(5)
 
+                    val avgDailyThisMonth =
+                        calculateDailyTAverageThisMonth(monthlyExpenses, currentMonth)
+
                     _state.update {
                         DashboardState.Success(
-                            monthlyExpenses = monthlyExpenses,
+                            spendThisMonth = spendThisMonth,
                             todaysExpenses = todaysExpenses,
-                            recentExpenses = recentExpenes
+                            recentExpenses = recentExpenes,
+                            avgDailyThisMonnth = avgDailyThisMonth
                         )
                     }
                 }
@@ -76,5 +82,14 @@ class DashboardViewModel(private val expenseUseCases: ExpenseUseCases) : ViewMod
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun calculateDailyTAverageThisMonth(
+        expenses: List<ExpenseWithCategory>,
+        month: YearMonth
+    ): Double {
+        val daysInMonth = month.lengthOfMonth()
+        val total = expenses.sumOf { it.expense.amount }
+        return total / daysInMonth
     }
 }
